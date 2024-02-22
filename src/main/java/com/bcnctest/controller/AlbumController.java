@@ -21,7 +21,7 @@ public class AlbumController {
     }
 
     @GetMapping("load/all")
-    public ResponseEntity loadAllAlbum() {
+    public ResponseEntity<Object> loadAllAlbum() {
         albumService.loadAlbumsWithPhotosIntoDB();
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
@@ -32,9 +32,16 @@ public class AlbumController {
         return new ResponseEntity<>(albums, HttpStatus.OK);
     }
 
-    @GetMapping("getAll")
+    @GetMapping("all")
     public ResponseEntity<List<AlbumDTO>> getAllAlbumFromH2DB() {
         List<AlbumDTO> albums = albumService.loadAlbumsWithPhotosFromDB();
+        return new ResponseEntity<>(albums, HttpStatus.OK);
+
+    }
+
+    @GetMapping("all/cached")
+    public ResponseEntity<List<AlbumDTO>> getAllAlbumWithRedis() {
+        List<AlbumDTO> albums = albumService.loadAlbumsWithPhotosWithRedis();
         return new ResponseEntity<>(albums, HttpStatus.OK);
 
     }
