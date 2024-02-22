@@ -6,7 +6,8 @@ import com.bcnctest.exception.NoAlbumException;
 import com.bcnctest.models.AlbumEntity;
 import com.bcnctest.models.PhotoEntity;
 import com.bcnctest.repository.IAlbumRepository;
-import com.bcnctest.shared.AlbumMapper;
+import com.bcnctest.shared.mappers.AlbumMapper;
+import com.bcnctest.shared.mappers.PhotoMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +19,14 @@ import static java.util.stream.Collectors.groupingBy;
 public class AlbumService implements IAlbumService {
     final IAlbumRepository albumRepository;
     private final ApiService apiService;
-    private final AlbumMapper mapper;
+    private final AlbumMapper albumMapper;
+    private final PhotoMapper photoMapper;
 
-    public AlbumService(ApiService apiService, IAlbumRepository albumRepository, AlbumMapper mapper) {
+    public AlbumService(ApiService apiService, IAlbumRepository albumRepository, AlbumMapper albumMapper, PhotoMapper photoMapper) {
         this.apiService = apiService;
         this.albumRepository = albumRepository;
-        this.mapper = mapper;
+        this.albumMapper = albumMapper;
+        this.photoMapper = photoMapper;
     }
 
     @Override
@@ -35,13 +38,7 @@ public class AlbumService implements IAlbumService {
         }
         Map<Integer, List<PhotoEntity>> photosMap = photosList
                 .stream()
-                .map(photoDTO -> PhotoEntity
-                        .builder()
-                        .url(photoDTO.getUrl())
-                        .albumId(photoDTO.getAlbumId())
-                        .thumbnailUrl(photoDTO.getThumbnailUrl())
-                        .title(photoDTO.getTitle()).build()
-                )
+                .map(photoMapper::mapperPhotoDTOtoPhotoEntity)
                 .collect(groupingBy(PhotoEntity::getAlbumId));
 
         List<AlbumEntity> albumEntityList = albumList
@@ -67,7 +64,7 @@ public class AlbumService implements IAlbumService {
     public List<AlbumDTO> loadAlbumsWithPhotosFromDB() {
         return ((List<AlbumEntity>) albumRepository.findAll())
                 .stream()
-                .map(mapper::mapperAlbumEntityToAlbumDTO)
+                .map(albumMapper::mapperAlbumEntityToAlbumDTO)
                 .toList();
     }
 

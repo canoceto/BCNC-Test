@@ -1,4 +1,4 @@
-package com.bcnctest.shared;
+package com.bcnctest.shared.mappers;
 
 import com.bcnctest.dto.AlbumDTO;
 import com.bcnctest.models.AlbumEntity;
@@ -8,5 +8,4 @@ import org.mapstruct.Mapper;
 public interface AlbumMapper {
     AlbumDTO mapperAlbumEntityToAlbumDTO(AlbumEntity album);
 
-    AlbumEntity mapperAlbumDTOtoAlbumEntity(AlbumDTO album);
 }
