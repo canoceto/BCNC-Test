@@ -8,7 +8,6 @@ import com.bcnctest.models.PhotoEntity;
 import com.bcnctest.repository.IAlbumRepository;
 import com.bcnctest.shared.mappers.AlbumMapper;
 import com.bcnctest.shared.mappers.PhotoMapper;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
@@ -61,15 +60,6 @@ public class AlbumService implements IAlbumService {
     @Override
     public List<AlbumDTO> returnAlbumsWithPhotos() {
         return loadAlbumsFromApi();
-    }
-
-    @Override
-    @Cacheable("albumsDbCached")
-    public List<AlbumDTO> loadAlbumsWithPhotosWithRedis() {
-        return ((List<AlbumEntity>) albumRepository.findAll())
-                .stream()
-                .map(albumMapper::mapperAlbumEntityToAlbumDTO)
-                .toList();
     }
 
     @Override

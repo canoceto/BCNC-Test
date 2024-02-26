@@ -1,11 +1,10 @@
 package com.bcnctest.models;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Collection;
 
 @Setter
 @Getter
@@ -25,5 +24,9 @@ public class PhotoEntity {
     private String url;
     @Column(name = "thumbnailUrl", nullable = false)
     private String thumbnailUrl;
+
+    @Setter
+    @ManyToMany(mappedBy = "photos")
+    private Collection<AlbumEntity> albumEntities;
 
 }
