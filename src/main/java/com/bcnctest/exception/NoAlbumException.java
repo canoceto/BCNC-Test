@@ -6,8 +6,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class NoAlbumException extends RuntimeException {
-    private String msg;
-    private String code;
+    private final String msg;
+    private final String code;
 
     public NoAlbumException(String msg, String code) {
         super(msg);

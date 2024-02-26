@@ -1,30 +1,38 @@
 package com.bcnctest.controller;
 
-import com.bcnctest.BcncTestApplication;
+import com.bcnctest.dto.AlbumDTO;
+import com.bcnctest.repository.IAlbumRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletContext;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration
-@SpringBootTest(classes = BcncTestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
-public class AlbumControllerIntegrationTest {
+@ActiveProfiles("test")
+@SpringBootTest
+@AutoConfigureMockMvc
+class AlbumControllerIntegrationTest {
 
     private static final String CONTENT_TYPE = "application/json";
     @Autowired
@@ -37,7 +45,7 @@ public class AlbumControllerIntegrationTest {
     }
 
     @Test
-    public void givenWac_whenServletContext_thenItProvidesGreetController() {
+    void validateApplicationContextLoadsProperly() {
         final ServletContext servletContext = webApplicationContext.getServletContext();
         assertNotNull(servletContext);
         assertInstanceOf(MockServletContext.class, servletContext);
@@ -90,7 +98,7 @@ public class AlbumControllerIntegrationTest {
 //    }
 
     @Test
-    public void givenGreetURIWithPostAndFormData_whenMockMVC_thenResponseOK() throws Exception {
+    void givenGreetURIWithPostAndFormData_whenMockMVC_thenResponseOK() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .get("http://localhost:8080/api/load/all"))

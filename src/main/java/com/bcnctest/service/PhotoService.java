@@ -23,7 +23,7 @@ public class PhotoService implements IPhotoService {
 
     @Override
     public LinkedList<PhotoEntity> update(LinkedList<PhotoEntity> photoEntities) {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
@@ -33,16 +33,12 @@ public class PhotoService implements IPhotoService {
 
     @Override
     public LinkedList<PhotoEntity> deleteAll() {
-        return null;
+        return new LinkedList<>();
     }
 
     @Override
     public List<PhotoEntity> getAll() {
         return (List<PhotoEntity>) photoRepository.findAll();
-    }
-
-    public List<PhotoEntity> getAllFromAPI() {
-        return null;
     }
 
 }
