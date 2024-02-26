@@ -13,7 +13,3 @@ spring:
     url: jdbc:h2:mem:bcnc
     username: anonymous
     password: enigma
-
-redis:
-  host: localhost
-  port: 6379

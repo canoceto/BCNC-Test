@@ -3,6 +3,7 @@ package com.bcnctest.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Table(name = "Album")
 @NoArgsConstructor
 @AllArgsConstructor
-public class AlbumEntity {
+public class AlbumEntity implements Serializable {
     @Id
     private Integer id;
     private Integer userId;

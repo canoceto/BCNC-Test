@@ -9,8 +9,6 @@ public interface IAlbumService {
 
     List<AlbumDTO> returnAlbumsWithPhotos();
 
-    List<AlbumDTO> loadAlbumsWithPhotosWithRedis();
-
     List<AlbumDTO> loadAlbumsWithPhotosFromDB();
 
 }

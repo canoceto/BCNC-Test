@@ -38,12 +38,4 @@ public class AlbumController {
         return new ResponseEntity<>(albums, HttpStatus.OK);
 
     }
-
-    @GetMapping("all/cached")
-    public ResponseEntity<List<AlbumDTO>> getAllAlbumWithRedis() {
-        List<AlbumDTO> albums = albumService.loadAlbumsWithPhotosWithRedis();
-        return new ResponseEntity<>(albums, HttpStatus.OK);
-
-    }
-
 }
