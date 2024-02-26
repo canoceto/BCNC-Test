@@ -6,6 +6,7 @@ import com.bcnctest.exception.NoAlbumException;
 import com.bcnctest.models.AlbumEntity;
 import com.bcnctest.models.PhotoEntity;
 import com.bcnctest.repository.IAlbumRepository;
+import com.bcnctest.shared.Constant;
 import com.bcnctest.shared.mappers.AlbumMapper;
 import com.bcnctest.shared.mappers.PhotoMapper;
 import org.springframework.cache.annotation.EnableCaching;
@@ -36,7 +37,7 @@ public class AlbumService implements IAlbumService {
         List<AlbumDTO> albumList = apiService.loadAlbums();
         List<PhotoDTO> photosList = apiService.loadPhotos();
         if (albumList.isEmpty()) {
-            throw new NoAlbumException("No hay albums disponible", "A-400");
+            throw new NoAlbumException("No hay albums disposable", Constant.ERROR_404);
         }
         Map<Integer, List<PhotoEntity>> photosMap = photosList
                 .stream()
@@ -74,7 +75,7 @@ public class AlbumService implements IAlbumService {
         List<AlbumDTO> albumList = apiService.loadAlbums();
         List<PhotoDTO> photosList = apiService.loadPhotos();
         if (albumList.isEmpty()) {
-            throw new NoAlbumException("No hay albums disponible", "A-400");
+            throw new NoAlbumException("No hay albums disponible", Constant.ERROR_404);
         }
         Map<Integer, List<PhotoDTO>> photosMap = photosList
                 .stream()

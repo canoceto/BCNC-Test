@@ -21,9 +21,9 @@ public class AlbumController {
     }
 
     @GetMapping("load/all")
-    public ResponseEntity<Object> loadAllAlbum() {
+    public ResponseEntity<String> loadAllAlbum() {
         albumService.loadAlbumsWithPhotosIntoDB();
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>("Load successfully", HttpStatus.OK);
     }
 
     @GetMapping("recover/all")
