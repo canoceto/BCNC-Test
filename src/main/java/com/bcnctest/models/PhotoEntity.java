@@ -11,7 +11,7 @@ import java.util.Collection;
 @Getter
 @Entity
 @Builder
-@Table
+@Table(name = "photo")
 @NoArgsConstructor
 @AllArgsConstructor
 public class PhotoEntity implements Serializable {

@@ -18,19 +18,14 @@ import java.util.Map;
 import static java.util.stream.Collectors.groupingBy;
 
 @Service
-@EnableCaching
+@RequiredArgsConstructor
 public class AlbumService implements IAlbumService {
-    final IAlbumRepository albumRepository;
+
+    private final IAlbumRepository albumRepository;
     private final ApiService apiService;
     private final AlbumMapper albumMapper;
     private final PhotoMapper photoMapper;
 
-    public AlbumService(ApiService apiService, IAlbumRepository albumRepository, AlbumMapper albumMapper, PhotoMapper photoMapper) {
-        this.apiService = apiService;
-        this.albumRepository = albumRepository;
-        this.albumMapper = albumMapper;
-        this.photoMapper = photoMapper;
-    }
 
     @Override
     public void loadAlbumsWithPhotosIntoDB() {

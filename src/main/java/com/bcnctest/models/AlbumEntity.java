@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 @Entity
-@Table(name = "Album")
+@Table(name = "album")
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlbumEntity implements Serializable {

@@ -2,19 +2,16 @@ package com.bcnctest.service;
 
 import com.bcnctest.models.PhotoEntity;
 import com.bcnctest.repository.IPhotoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PhotoService implements IPhotoService {
     private final IPhotoRepository photoRepository;
-
-    public PhotoService(IPhotoRepository photoRepository) {
-        this.photoRepository = photoRepository;
-    }
-
 
     @Override
     public void create(LinkedList<PhotoEntity> photoEntities) {

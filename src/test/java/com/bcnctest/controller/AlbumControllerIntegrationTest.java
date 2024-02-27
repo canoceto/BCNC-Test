@@ -35,8 +35,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 class AlbumControllerIntegrationTest {
 
     private static final String CONTENT_TYPE = "application/json";
+    private static final String BASE_PATH = "http://localhost:8080";
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    @Autowired
+    private IAlbumRepository albumRepository;
+
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -49,63 +58,43 @@ class AlbumControllerIntegrationTest {
         final ServletContext servletContext = webApplicationContext.getServletContext();
         assertNotNull(servletContext);
         assertInstanceOf(MockServletContext.class, servletContext);
-        assertNotNull(webApplicationContext.getBean("AlbumController"));
     }
-
-
-//
-//    @Test
-//    public void givenHomePageURI_whenMockMVC_thenReturnsIndexJSPViewName() throws Exception {
-//        this
-//                .mockMvc
-//                .perform(MockMvcRequestBuilders.get("/homePage"))
-//                .andDo(print())
-//                .andExpect(MockMvcResultMatchers.view().name("index"));
-//    }
-//
-//    @Test
-//    public void givenGreetURI_whenMockMVC_thenVerifyResponse() throws Exception {
-//        final MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/greet"))
-//                .andDo(print())
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Hello World!!!"))
-//                .andReturn();
-//        assertEquals(CONTENT_TYPE, mvcResult.getResponse().getContentType());
-//    }
-//
-//    @Test
-//    public void givenGreetURIWithPathVariable_whenMockMVC_thenResponseOK() throws Exception {
-//        this.mockMvc.perform(MockMvcRequestBuilders.get("/greetWithPathVariable/John")).andDo(print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Hello World John!!!"));
-//    }
-//
-//    @Test
-//    public void givenGreetURIWithPathVariable_2_whenMockMVC_thenVerifyResponse() throws Exception {
-//        this.mockMvc.perform(MockMvcRequestBuilders.get("/greetWithPathVariable/{name}", "Doe")).andDo(print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Hello World Doe!!!"));
-//    }
-//
-//    @Test
-//    public void givenGreetURIWithQueryParameter_whenMockMVC_thenResponseOK() throws Exception {
-//        this.mockMvc.perform(MockMvcRequestBuilders.get("/greetWithQueryVariable").param("name", "John Doe")).andDo(print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Hello World John Doe!!!"));
-//    }
-//
-//    @Test
-//    public void givenGreetURIWithPost_whenMockMVC_thenVerifyResponse() throws Exception {
-//        this.mockMvc.perform(MockMvcRequestBuilders.post("/greetWithPost")).andDo(print()).andExpect(MockMvcResultMatchers.status().isOk()).andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Hello World!!!"));
-//    }
 
     @Test
     void givenGreetURIWithPostAndFormData_whenMockMVC_thenResponseOK() throws Exception {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .get("http://localhost:8080/api/load/all"))
+                        .post(BASE_PATH + "/api/load/all"))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message")
-                        .value("Load successfully"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl(BASE_PATH + "/api/all"));
+
+        MvcResult result = this.mockMvc.perform(MockMvcRequestBuilders
+                        .get(BASE_PATH + "/api/all")).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().contentType(CONTENT_TYPE))
+                .andReturn();
+
+        List<AlbumDTO> albums = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+        });
+
+        assertThat(albums).isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("Validate the albums and photos were saved in db")
+    @Sql(scripts = "classpath:/sql/clean_up.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void givenTheRequestToLoadAlbumsIsSuccessfulThenAlbumsAreSavedInDb() {
+        assertThat(albumRepository.findAll()).isEmpty();
+        givenTheAlbumsAreLoaded();
+        var albums = albumRepository.findAll();
+        assertThat(albums).isNotEmpty();
+    }
+
+    @SneakyThrows
+    private void givenTheAlbumsAreLoaded() {
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .post("http://localhost:8080/api/load/all")).andReturn();
     }
 }
